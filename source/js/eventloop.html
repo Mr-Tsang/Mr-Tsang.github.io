@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>事件循环（Event Loop） | 跬步千里</title>
+    <meta name="generator" content="VuePress 1.9.9">
+    <link rel="icon" href="/images/icon.png">
+    <meta name="description" content="前端工程师的进阶之路">
+    <meta charset="UTF-8">
+    <meta http-quiv="X-UA-Compatible" cotent="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preload" href="/assets/css/0.styles.a9751e9e.css" as="style"><link rel="preload" href="/assets/js/app.1ce777fa.js" as="script"><link rel="preload" href="/assets/js/5.f3f9bc8f.js" as="script"><link rel="preload" href="/assets/js/24.5254c5bc.js" as="script"><link rel="preload" href="/assets/js/4.6792afd8.js" as="script"><link rel="prefetch" href="/assets/js/1.182dd2e0.js"><link rel="prefetch" href="/assets/js/10.fb9db25e.js"><link rel="prefetch" href="/assets/js/11.b45cb294.js"><link rel="prefetch" href="/assets/js/12.cb73d5a4.js"><link rel="prefetch" href="/assets/js/13.f3fe3a9f.js"><link rel="prefetch" href="/assets/js/14.d2d7b2b8.js"><link rel="prefetch" href="/assets/js/15.83a03705.js"><link rel="prefetch" href="/assets/js/16.4cc6bafb.js"><link rel="prefetch" href="/assets/js/17.78db7fcf.js"><link rel="prefetch" href="/assets/js/18.2e9a2ef4.js"><link rel="prefetch" href="/assets/js/19.6ecf296b.js"><link rel="prefetch" href="/assets/js/20.c529823c.js"><link rel="prefetch" href="/assets/js/21.2b52d0c2.js"><link rel="prefetch" href="/assets/js/22.7f3b5e82.js"><link rel="prefetch" href="/assets/js/23.4ce64b61.js"><link rel="prefetch" href="/assets/js/25.4fdb6932.js"><link rel="prefetch" href="/assets/js/26.2746f2f1.js"><link rel="prefetch" href="/assets/js/27.18f22661.js"><link rel="prefetch" href="/assets/js/28.653a793f.js"><link rel="prefetch" href="/assets/js/29.7d0b19e9.js"><link rel="prefetch" href="/assets/js/3.0d3a5a00.js"><link rel="prefetch" href="/assets/js/6.3c0ec666.js"><link rel="prefetch" href="/assets/js/7.79300a8b.js"><link rel="prefetch" href="/assets/js/8.81985c49.js"><link rel="prefetch" href="/assets/js/9.b2c4a0a6.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.a9751e9e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><!----> <header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <img src="/images/logo.jpeg" alt="跬步千里" class="logo can-hide" style="border-radius: 50%;"> <span class="site-name can-hide">跬步千里</span> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/source/css/optimize.html" class="nav-link">
+  CSS
+</a></div><div class="nav-item"><a href="/source/js/eventloop.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  JS
+</a></div><div class="nav-item"><a href="/source/vue/pinia.html" class="nav-link">
+  Vue
+</a></div><div class="nav-item"><a href="/source/engineering/nginx.html" class="nav-link">
+  前端工程化
+</a></div><div class="nav-item"><a href="https://github.com/Mr-Tsang" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/source/css/optimize.html" class="nav-link">
+  CSS
+</a></div><div class="nav-item"><a href="/source/js/eventloop.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  JS
+</a></div><div class="nav-item"><a href="/source/vue/pinia.html" class="nav-link">
+  Vue
+</a></div><div class="nav-item"><a href="/source/engineering/nginx.html" class="nav-link">
+  前端工程化
+</a></div><div class="nav-item"><a href="https://github.com/Mr-Tsang" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>JS</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/source/js/eventloop.html" aria-current="page" class="active sidebar-link">事件循环（Event Loop）</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/source/js/eventloop.html#_1-介绍" class="sidebar-link">1. 介绍</a></li><li class="sidebar-sub-header"><a href="/source/js/eventloop.html#_2-任务队列" class="sidebar-link">2. 任务队列</a></li></ul></li><li><a href="/source/js/delegation.html" class="sidebar-link">事件代理（Event Delegation）</a></li><li><a href="/source/js/prototype.html" class="sidebar-link">原型与原型链</a></li><li><a href="/source/js/requst.html" class="sidebar-link">get和post的区别</a></li></ul></section></li></ul> </aside> <div class="theme-container__inner"><section class="main-container"><div class="page-left"><div sidebar-items="[object Object]" class="article" data-v-1697259b><div class="article-detail" data-v-1697259b><header class="post-header" data-v-1697259b><div class="post-title" data-v-1697259b><h1 data-v-1697259b>事件循环（Event Loop）</h1></div> <div class="post-meta" data-v-1697259b><div class="post-time" data-v-1697259b><i aria-hidden="true" class="fa fa-calendar" data-v-1697259b></i> <time data-v-1697259b>2023-3-2</time></div> <div class="article-footer" data-v-e06d3056 data-v-1697259b><div class="article-category" data-v-e06d3056><div class="article-category-custom" data-v-e06d3056><span data-v-e06d3056><a data-v-e06d3056><i aria-hidden="true" class="fa fa-folder-o" data-v-e06d3056></i>
+                    JS
+                </a></span></div></div> <div class="article-tags" data-v-e06d3056><div class="article-tag cyan" data-v-e06d3056><a href class="tag-name" data-v-e06d3056><i aria-hidden="true" class="fa fa-tag" data-v-e06d3056></i> <span data-v-e06d3056>Node</span></a></div><div class="article-tag black" data-v-e06d3056><a href class="tag-name" data-v-e06d3056><i aria-hidden="true" class="fa fa-tag" data-v-e06d3056></i> <span data-v-e06d3056>堆栈</span></a></div></div></div></div></header> <div class="article-content" data-v-1697259b><div class="theme-default-content content__default" data-v-1697259b><h2 id="_1-介绍"><a href="#_1-介绍" class="header-anchor">#</a> 1. 介绍</h2> <p>Event Loop即事件循环，是指浏览器或Node的一种解决javaScript单线程运行时不会阻塞的一种机制，也就是我们经常使用异步的原理。</p> <blockquote><p>一句话描述：EventLoop会不断的去检查call Stack(调用栈)中是否有函数要执行</p></blockquote> <p><strong>事件循环的进程模型</strong>：</p> <ul><li>选择当前要执行的任务队列，选择任务队列中最先进入的任务，如果任务队列为空即null，则执行跳转到微任务（MicroTask）的执行步骤</li> <li>将事件循环中的任务设置为已选择任务</li> <li>执行任务</li> <li>将事件循环中当前运行任务设置为null</li> <li>将已经运行完成的任务从任务队列中删除</li> <li>microtasks步骤：进入microtask检查点</li> <li>更新界面渲染</li> <li>返回第一步</li></ul> <p><img src="/images/js/js-1.png" alt=""></p> <p><strong>执行进入微任务（microtask）检查时，用户代理会执行</strong>👇</p> <ul><li>设置microtask检查点标志为true</li> <li>当事件循环microtask执行不为空时：选择一个最先进入的microtask队列的microtask，将事件循环的microtask设置为已选择的microtask，运行microtask，将已经执行完成的microtask为null，移出microtask中的microtask</li> <li>清理IndexDB事务</li> <li>设置进入microtask检查点的标志为false</li></ul> <p><img src="/images/js/js-2.gif" alt=""></p> <p>在node中，事件循环表现出的状态与浏览器中大致相同。不同的是node中有一套自己的模型。node中事件循环的实现是依靠的libuv引擎。</p> <p><strong>Node 的 EventLoop 一共分为6个阶段，每个细节</strong>👇</p> <ul><li>timers: 这个阶段执行定时器队列中的回调如 setTimeout() 和 setInterval()</li> <li>I/O callbacks: 这个阶段执行几乎所有的回调。但是不包括close事件，定时器和setImmediate()的回调</li> <li>idle, prepare: 这个阶段仅在内部使用，可以不必理会</li> <li>poll: 等待新的I/O事件，node在一些特殊情况下会阻塞在这里</li> <li>check: setImmediate()的回调会在这个阶段执行</li> <li>close callbacks: 例如socket.on('close', ...)这种close事件的回调</li></ul> <div class="language- extra-class"><pre class="language-text"><code>┌───────────────────────┐
+┌─&gt;│        timers         │
+│  └──────────┬────────────┘
+│  ┌──────────┴────────────┐
+│  │     I/O callbacks     │
+│  └──────────┬────────────┘
+│  ┌──────────┴────────────┐
+│  │     idle, prepare     │
+│  └──────────┬────────────┘      ┌───────────────┐
+│  ┌──────────┴────────────┐      │   incoming:   │
+│  │         poll          │&lt;──connections───     │
+│  └──────────┬────────────┘      │   data, etc.  │
+│  ┌──────────┴────────────┐      └───────────────┘
+│  │        check          │
+│  └──────────┬────────────┘
+│  ┌──────────┴────────────┐
+└──┤    close callbacks    │
+   └───────────────────────┘
+</code></pre></div><p><strong>node中的事件循环的顺序</strong>：外部输入数据--&gt;轮询阶段(poll)--&gt;检查阶段(check)--&gt;关闭事件回调阶段(close callback)--&gt;定时器检测阶段(timer)--&gt;I/O事件回调阶段(I/O callbacks)--&gt;闲置阶段(idle, prepare)--&gt;轮询阶段...</p> <h2 id="_2-任务队列"><a href="#_2-任务队列" class="header-anchor">#</a> 2. 任务队列</h2> <h3 id="_2-1-调用栈"><a href="#_2-1-调用栈" class="header-anchor">#</a> 2.1 调用栈</h3> <p>调用栈是一个先进后出的堆栈。</p> <p>常见:浏览器控制台的错误堆栈跟踪，浏览器在调用堆栈中查找函数名，以通知是哪个函数发起了当前调用</p> <h3 id="_2-2-同步任务"><a href="#_2-2-同步任务" class="header-anchor">#</a> 2.2 同步任务</h3> <p>在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务。</p> <h3 id="_2-3-异步任务"><a href="#_2-3-异步任务" class="header-anchor">#</a> 2.3 异步任务</h3> <p>不进入主线程、而进入”任务队列”的任务，当主线程中的任务运行完了，才会从”任务队列”取出异步任务放入主线程执行。
+异步任务分为：</p> <ul><li>宏任务
+<ul><li>定时器（setTimeout()、setInterval()、setImmediate()等）</li> <li>事件绑定</li> <li>ajax</li> <li>回调函数</li> <li>Node中fs可以进行异步的I/O操作</li></ul></li> <li>微任务
+<ul><li>Promise(async/await) =&gt; Promise并不是完全的同步，在promise中是同步任务，执行resolve或者reject回调的时候，此时是异步操作，会先将then/catch等放到微任务队列。当主栈完成后，才会再去调用resolve/reject方法执行</li> <li>process.nextTick （node中实现的api，把当前任务放到主栈最后执行，当主栈执行完，先执行nextTick，再到等待队列中找）</li> <li>MutationObserver （创建并返回一个新的 MutationObserver 它会在指定的DOM发生变化时被调用）</li></ul></li></ul> <p>循环机制的不同队列：</p> <ul><li>事件循环： 任务队列初始化完成后，事件循环会无限次地执行，一轮又一轮。只有异步任务的回 调函数队列清空了，才会停止执行</li> <li>poll队列：用于处理I/O操作的回调，事件循环会在空闲的时候暂停，等待新的I/O事件。(为了更 快响应客户端请求)</li></ul> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> <span class="token function-variable function">bar</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'bar'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">baz</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'baz'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> <span class="token function-variable function">foo</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'foo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span>bar<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">baz</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*
+ *同步代码执行
+ *定时器为异步任务，被推入到异步模块执行
+ *同步代码执行完毕之后，foo出栈，事件循环启动
+ *timer队列 =&gt; poll队列（判断等待）
+ *10毫秒之后定时器到达阈值，回调函数进入timer队列
+ *setTimeout的回调函数推入调用栈中执行
+*/</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'脚本开始'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'定时器'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token comment">// I/O操作: 假设 读取文档内容，耗时20ms</span>
+fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">'a.txt'</span><span class="token punctuation">,</span><span class="token string">'utf-8'</span><span class="token punctuation">,</span><span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span>data</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token function">setImmediate</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'setImmediate'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'脚本结束'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">/*
+ *同步代码执行
+ *setImmediate是node独有的api，被它包裹的函数会直接进入到事件循环的check队列
+ *在poll阻塞之后发现，check队列有回调函数，则推入栈中执行
+ *若操作小于10ms则会在poll队列继续判断等待
+ *到达10ms时，定时器的回调函数进入timer队列，继续推入栈中执行
+ *poll队列继续判断等待，再过10ms则执行I/O回调函数
+*/</span>
+</code></pre></div><p>测试一下👇：</p> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;同步任务1&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">function</span> <span class="token function">asyn</span><span class="token punctuation">(</span><span class="token parameter">mac</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;同步任务2&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mac<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>mac<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;Promise中的同步任务&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">&quot;Promise中回调的异步微任务&quot;</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;异步任务中的宏任务&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;定时器中的定时器（宏任务）&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+    <span class="token function">asyn</span><span class="token punctuation">(</span><span class="token string">&quot;定时器传递任务&quot;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">res</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+        console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'定时器中的:'</span><span class="token punctuation">,</span> res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+<span class="token function">asyn</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">res</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;同步任务3&quot;</span><span class="token punctuation">)</span>
+
+<span class="token comment">//打印顺序：</span>
+<span class="token comment">/*
+ *同步任务1
+ *同步任务2
+ *Promise中的同步任务
+ *同步任务3
+ *Promise中回调的异步微任务
+ *异步任务中的宏任务
+ *同步任务2
+ *定时器传递任务
+ *Promise中的同步任务
+ *定时器中的: Promise中回调的异步微任务
+ *定时器中的定时器（宏任务）
+*/</span>
+</code></pre></div><p>执行步骤总结：先同步任务，再异步任务，异步任务又分微任务和宏任务，先微任务再宏任务</p> <h3 id="_2-4-settimeout和setimmediate"><a href="#_2-4-settimeout和setimmediate" class="header-anchor">#</a> 2.4 setTimeout和setImmediate</h3> <p>由于 setTimeout 在 timers 阶段执行，而 setImmediate 在 check 阶段执行。理论上，<strong>setTimeout 会早于 setImmediate完成</strong>。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// timer队列</span>
+<span class="token function">setImmediate</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">//check队列</span>
+</code></pre></div><p>👆代码应该先输出1，再输出2，但是实际执行的时候，结果却是不确定，有时还会先输出2，再输出 1</p> <ul><li>因为setTimeout的第二个参数默认为0。但是实际上，Node 做不到0毫秒，最少也需要1毫 秒，根据官方文档，第二个参数的取值范围在1毫秒到2147483647毫秒之间。也就是说， setTimeout(f, 0)等同于setTimeout(f, 1)</li> <li>实际执行的时候，进入事件循环以后，取决于系统当时的状况。如果系统运行足够快，没到1毫秒，定时器还来不及将回调函数加入到timer队列当中，那么 timers 阶段就会跳过，进入 check 阶段，先执行setImmediate的回调函数</li></ul> <p>但是，下面的代码一定是先输出2，再输出1👇</p> <div class="language-js extra-class"><pre class="language-js"><code>constfs<span class="token operator">=</span><span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  fs<span class="token punctuation">.</span><span class="token function">readFile</span><span class="token punctuation">(</span><span class="token string">'test.js'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setImmediate</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p>I/O操作的回调在poll阶段被执行，setTimeout进入timer队列，setImmediate进入check队列，此时事件循环处于poll阶段，继续向下执行调用check队列中的函数，然后再调用timer队列中的函数 因此<strong>setImmediate总会早于setTimeout执行</strong>。</p> <h3 id="_2-5-process-nexttick"><a href="#_2-5-process-nexttick" class="header-anchor">#</a> 2.5 process.nextTick</h3> <p>虽然有异步的特性，但是并不属于事件循环机制的一部分。
+在node的异步模块中有一个特殊的nextTick队列，这个队列的优先级比事件循环更高，所以总会在事 件循环之前被调用。</p> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'同步代码'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+process<span class="token punctuation">.</span><span class="token function">nextTick</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;nextTick&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token function">setTimeout</span><span class="token punctuation">(</span>bar<span class="token punctuation">,</span><span class="token number">10</span><span class="token punctuation">)</span>
+<span class="token comment">/*
+ *先执行同步代码
+ *定时器回调函数、nextTick回调函数直接进入对应队列等待执行
+ *同步代码执行完毕，在启动事件循环之前，node会先检查nextTick队列中是否有任务
+ *执行nextTick的回调函数
+ *事件循环启动，执行Timer中的回调任务
+ */</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'同步代码'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;promise&quot;</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+process<span class="token punctuation">.</span><span class="token function">nextTick</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;nextTick&quot;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token function">setImmediate</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'setImmediate'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">/*
+ * 先执行同步代码
+ * promise回调函数、nextTick回调函数、setImmediate回调函数进入对应队列等待执行
+ * 同步代码执行完毕，在启动事件循环之前，node会先检查nextTick队列中是否有任务
+ * 执行nextTick的回调函数
+ * 执行微任务队列中的回调函数
+ * 事件循环启动，执行Timer中的回调任务
+*/</span>
+</code></pre></div><p>process.nextTick()先于Promise.then()执行, setTimeout()与setImmediate()执行顺序取决于setTimeout的执行周期与设备性能</p> <p>总结：同步任务 &gt; process.nextTick &gt; 微任务 &gt; 宏任务 &gt; 事件循环</p></div> <!----></div> <div class="pagination-wrapper" data-v-567cdefa data-v-1697259b><!----> <!----></div> <div class="valine-body" data-v-f35afe60 data-v-1697259b><div id="valine-vuepress-comment" data-v-f35afe60></div></div></div></div></div></section></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;background-color:#fff;box-shadow:0 1px 8px 0 rgba(0, 0, 0, 0.1);display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div><div class="kanbanniang" data-v-5775ee02><div class="banniang-container" style="display:;" data-v-5775ee02><div class="messageBox" style="right:68px;bottom:190px;display:none;" data-v-5775ee02>
+      欢迎来到 跬步千里
+    </div> <div class="operation" style="right:90px;bottom:40px;display:none;" data-v-5775ee02><i class="kbnfont kbn-ban-home ban-home" data-v-5775ee02></i> <i class="kbnfont kbn-ban-message message" data-v-5775ee02></i> <i class="kbnfont kbn-ban-close close" data-v-5775ee02></i> <a target="_blank" href="https://vuepress-theme-reco.recoluan.com/views/plugins/kanbanniang.html" data-v-5775ee02><i class="kbnfont kbn-ban-info info" data-v-5775ee02></i></a> <i class="kbnfont kbn-ban-theme skin" style="display:none;" data-v-5775ee02></i></div> <canvas id="banniang" width="150" height="220" class="live2d" style="right:90px;bottom:-20px;opacity:0.9;" data-v-5775ee02></canvas></div> <div class="showBanNiang" style="display:none;" data-v-5775ee02>
+    看板娘
+  </div></div><div class="Sakura" data-v-248d85d6><canvas id="canvas_sakura" style="z-index:100;" data-v-248d85d6></canvas></div><div></div><canvas id="vuepress-canvas-cursor"></canvas></div></div>
+    <script src="/assets/js/app.1ce777fa.js" defer></script><script src="/assets/js/5.f3f9bc8f.js" defer></script><script src="/assets/js/24.5254c5bc.js" defer></script><script src="/assets/js/4.6792afd8.js" defer></script>
+  </body>
+</html>

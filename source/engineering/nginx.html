@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Nginx解决跨域和Vue项目部署后刷新404 | 跬步千里</title>
+    <meta name="generator" content="VuePress 1.9.9">
+    <link rel="icon" href="/images/icon.png">
+    <meta name="description" content="前端工程师的进阶之路">
+    <meta charset="UTF-8">
+    <meta http-quiv="X-UA-Compatible" cotent="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="preload" href="/assets/css/0.styles.a9751e9e.css" as="style"><link rel="preload" href="/assets/js/app.1ce777fa.js" as="script"><link rel="preload" href="/assets/js/5.f3f9bc8f.js" as="script"><link rel="preload" href="/assets/js/22.7f3b5e82.js" as="script"><link rel="preload" href="/assets/js/4.6792afd8.js" as="script"><link rel="prefetch" href="/assets/js/1.182dd2e0.js"><link rel="prefetch" href="/assets/js/10.fb9db25e.js"><link rel="prefetch" href="/assets/js/11.b45cb294.js"><link rel="prefetch" href="/assets/js/12.cb73d5a4.js"><link rel="prefetch" href="/assets/js/13.f3fe3a9f.js"><link rel="prefetch" href="/assets/js/14.d2d7b2b8.js"><link rel="prefetch" href="/assets/js/15.83a03705.js"><link rel="prefetch" href="/assets/js/16.4cc6bafb.js"><link rel="prefetch" href="/assets/js/17.78db7fcf.js"><link rel="prefetch" href="/assets/js/18.2e9a2ef4.js"><link rel="prefetch" href="/assets/js/19.6ecf296b.js"><link rel="prefetch" href="/assets/js/20.c529823c.js"><link rel="prefetch" href="/assets/js/21.2b52d0c2.js"><link rel="prefetch" href="/assets/js/23.4ce64b61.js"><link rel="prefetch" href="/assets/js/24.5254c5bc.js"><link rel="prefetch" href="/assets/js/25.4fdb6932.js"><link rel="prefetch" href="/assets/js/26.2746f2f1.js"><link rel="prefetch" href="/assets/js/27.18f22661.js"><link rel="prefetch" href="/assets/js/28.653a793f.js"><link rel="prefetch" href="/assets/js/29.7d0b19e9.js"><link rel="prefetch" href="/assets/js/3.0d3a5a00.js"><link rel="prefetch" href="/assets/js/6.3c0ec666.js"><link rel="prefetch" href="/assets/js/7.79300a8b.js"><link rel="prefetch" href="/assets/js/8.81985c49.js"><link rel="prefetch" href="/assets/js/9.b2c4a0a6.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.a9751e9e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><!----> <header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <img src="/images/logo.jpeg" alt="跬步千里" class="logo can-hide" style="border-radius: 50%;"> <span class="site-name can-hide">跬步千里</span> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/source/css/optimize.html" class="nav-link">
+  CSS
+</a></div><div class="nav-item"><a href="/source/js/eventloop.html" class="nav-link">
+  JS
+</a></div><div class="nav-item"><a href="/source/vue/pinia.html" class="nav-link">
+  Vue
+</a></div><div class="nav-item"><a href="/source/engineering/nginx.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  前端工程化
+</a></div><div class="nav-item"><a href="https://github.com/Mr-Tsang" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/" class="nav-link">
+  首页
+</a></div><div class="nav-item"><a href="/source/css/optimize.html" class="nav-link">
+  CSS
+</a></div><div class="nav-item"><a href="/source/js/eventloop.html" class="nav-link">
+  JS
+</a></div><div class="nav-item"><a href="/source/vue/pinia.html" class="nav-link">
+  Vue
+</a></div><div class="nav-item"><a href="/source/engineering/nginx.html" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  前端工程化
+</a></div><div class="nav-item"><a href="https://github.com/Mr-Tsang" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  GitHub
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>前端工程化</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/source/engineering/nginx.html" aria-current="page" class="active sidebar-link">Nginx解决跨域和Vue项目部署后刷新404</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/source/engineering/nginx.html#什么是跨域" class="sidebar-link">什么是跨域</a></li><li class="sidebar-sub-header"><a href="/source/engineering/nginx.html#解决跨域" class="sidebar-link">解决跨域</a></li></ul></li><li><a href="/source/engineering/cli.html" class="sidebar-link">从0构建自己的脚手架</a></li><li><a href="/source/engineering/microfront.html" class="sidebar-link">浅谈微前端</a></li></ul></section></li></ul> </aside> <div class="theme-container__inner"><section class="main-container"><div class="page-left"><div sidebar-items="[object Object]" class="article" data-v-1697259b><div class="article-detail" data-v-1697259b><header class="post-header" data-v-1697259b><div class="post-title" data-v-1697259b><h1 data-v-1697259b>Nginx解决跨域和Vue项目部署后刷新404</h1></div> <div class="post-meta" data-v-1697259b><div class="post-time" data-v-1697259b><i aria-hidden="true" class="fa fa-calendar" data-v-1697259b></i> <time data-v-1697259b>2023-3-30</time></div> <div class="article-footer" data-v-e06d3056 data-v-1697259b><div class="article-category" data-v-e06d3056><div class="article-category-custom" data-v-e06d3056><span data-v-e06d3056><a data-v-e06d3056><i aria-hidden="true" class="fa fa-folder-o" data-v-e06d3056></i>
+                    Engineering
+                </a></span></div></div> <div class="article-tags" data-v-e06d3056><div class="article-tag yellow" data-v-e06d3056><a href class="tag-name" data-v-e06d3056><i aria-hidden="true" class="fa fa-tag" data-v-e06d3056></i> <span data-v-e06d3056>Nginx</span></a></div><div class="article-tag yellow" data-v-e06d3056><a href class="tag-name" data-v-e06d3056><i aria-hidden="true" class="fa fa-tag" data-v-e06d3056></i> <span data-v-e06d3056>跨域</span></a></div></div></div></div></header> <div class="article-content" data-v-1697259b><div class="theme-default-content content__default" data-v-1697259b><h2 id="什么是跨域"><a href="#什么是跨域" class="header-anchor">#</a> 什么是跨域</h2> <ul><li>浏览器不执行其他网站的脚本，是浏览器的同源策略造成，是对JavaScript的一种安全限制；</li> <li>换句话说：通过浏览器向其他服务器发送请求时，不是服务器不响应，而是服务器返回的结果被浏览器限制了；</li> <li>同源策略（Sameoriginpolicy）是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，则浏览器的正常功能可能都会受到影响。可以说Web是构建在同源策略基础之上的，浏览器只是针对同源策略的一种实现。同源策略会阻止一个域的javascript脚本和另外一个域的内容进行交互。所谓同源：指的是协议、域名、端口 都要保持一致。</li></ul> <p>解决跨域的方式有很多，比如JSONP、服务端设置CORS等等，这里不再详细展开，重点聊聊Nginx代理的方式。</p> <h2 id="解决跨域"><a href="#解决跨域" class="header-anchor">#</a> 解决跨域</h2> <h3 id="proxy代理"><a href="#proxy代理" class="header-anchor">#</a> proxy代理</h3> <p>开发vue项目时，修改vue.config.js中的proxy可以解决跨域问题。但这只是为了方便开发，只是在开发时生效，部署到服务器后依然还是要解决跨域。</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token literal-property property">devServer</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 端口号</span>
+    <span class="token literal-property property">port</span><span class="token operator">:</span> <span class="token string">&quot;80&quot;</span><span class="token punctuation">,</span>
+    <span class="token comment">//解决跨域</span>
+    <span class="token literal-property property">proxy</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">'/proxy'</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token string-property property">'target'</span><span class="token operator">:</span> <span class="token string">'http://**.*.**.***/'</span><span class="token punctuation">,</span><span class="token comment">//目标服务器</span>
+        <span class="token string-property property">'secure'</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token comment">// false为http访问，true为https访问</span>
+        <span class="token string-property property">'changeOrigin'</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span> <span class="token comment">// 跨域访问设置，true代表跨域</span>
+        <span class="token string-property property">'pathRewrite'</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token comment">// 路径改写规则</span>
+          <span class="token string-property property">'^/proxy'</span><span class="token operator">:</span> <span class="token string">''</span> <span class="token comment">// 以/proxy/为开头的改写为''</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h3 id="nginx代理"><a href="#nginx代理" class="header-anchor">#</a> nginx代理</h3> <p>nginx代理分为正向代理或反向代理。我们日常的“科学上网”可以用nginx做正向代理，而反向代理则可以用来解决跨域问题。</p> <p>在宝塔面板中修改nginx的配置</p> <div class="language- extra-class"><pre class="language-text"><code>server{
+    listen 80;#端口号
+    server_name zengqilin.online; #域名/ip
+    
+    #解决Vue页面刷新后404问题
+    location / {
+        index index.html index.htm index.php;
+        root dist; #静态文件根目录
+        try_files $uri $uri/ /index.html;
+    }
+
+    #需要代理的api地址
+    location ~ /api/ {
+        proxy_pass  http://xxx.xx.xx.xx:xxxx;
+    }
+}
+</code></pre></div><blockquote><p>如果服务器内网能访问，外网不能访问，一般只需要把防火墙关了即可；或者去云服务器将你的Nginx端口开放为外网可以访问。</p></blockquote></div> <div class="last-updated" data-v-1697259b><span class="prefix" data-v-1697259b>上次更新：</span> <span class="time" data-v-1697259b>2023/4/3 上午11:07:07</span></div></div> <div class="pagination-wrapper" data-v-567cdefa data-v-1697259b><!----> <!----></div> <div class="valine-body" data-v-f35afe60 data-v-1697259b><div id="valine-vuepress-comment" data-v-f35afe60></div></div></div></div></div></section></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;background-color:#fff;box-shadow:0 1px 8px 0 rgba(0, 0, 0, 0.1);display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div><div class="kanbanniang" data-v-5775ee02><div class="banniang-container" style="display:;" data-v-5775ee02><div class="messageBox" style="right:68px;bottom:190px;display:none;" data-v-5775ee02>
+      欢迎来到 跬步千里
+    </div> <div class="operation" style="right:90px;bottom:40px;display:none;" data-v-5775ee02><i class="kbnfont kbn-ban-home ban-home" data-v-5775ee02></i> <i class="kbnfont kbn-ban-message message" data-v-5775ee02></i> <i class="kbnfont kbn-ban-close close" data-v-5775ee02></i> <a target="_blank" href="https://vuepress-theme-reco.recoluan.com/views/plugins/kanbanniang.html" data-v-5775ee02><i class="kbnfont kbn-ban-info info" data-v-5775ee02></i></a> <i class="kbnfont kbn-ban-theme skin" style="display:none;" data-v-5775ee02></i></div> <canvas id="banniang" width="150" height="220" class="live2d" style="right:90px;bottom:-20px;opacity:0.9;" data-v-5775ee02></canvas></div> <div class="showBanNiang" style="display:none;" data-v-5775ee02>
+    看板娘
+  </div></div><div class="Sakura" data-v-248d85d6><canvas id="canvas_sakura" style="z-index:100;" data-v-248d85d6></canvas></div><div></div><canvas id="vuepress-canvas-cursor"></canvas></div></div>
+    <script src="/assets/js/app.1ce777fa.js" defer></script><script src="/assets/js/5.f3f9bc8f.js" defer></script><script src="/assets/js/22.7f3b5e82.js" defer></script><script src="/assets/js/4.6792afd8.js" defer></script>
+  </body>
+</html>
